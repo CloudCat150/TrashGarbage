@@ -7,7 +7,7 @@ def remove_shadow(image_path, output_path=None):
     image = cv2.imread(image_path, cv2.IMREAD_COLOR)
     if image is None:
         raise FileNotFoundError(f"Image at {image_path} could not be found.")
-    
+        
     # 이미지를 그레이스케일로 변환
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -35,21 +35,34 @@ def remove_shadow(image_path, output_path=None):
 
     return cleaned
 
-# 사용 예시
+# 디렉터리를 처리하는 함수 추가
+def process_directory(input_dir, output_dir):
+    # 입력 디렉토리 내 모든 파일 확인
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    for filename in os.listdir(input_dir):
+        input_path = os.path.join(input_dir, filename)
+        output_path = os.path.join(output_dir, filename)
+
+        if os.path.isfile(input_path):
+            try:
+                print(f"Processing {input_path}...")
+                remove_shadow(input_path, output_path)
+            except Exception as e:
+                print(f"Failed to process {input_path}: {e}")
+
+# 사용자로부터 파일명 입력 받기
+file_name = input("Directory Name : ").strip()
+
 # 현재 스크립트의 디렉터리
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# 입력 파일과 출력 파일 경로
-input_image = os.path.join(current_dir, 'Study Data', 'can', '1.jpg')
-output_image = os.path.join(current_dir, 'Preprocessed Data', 'can', '1.jpg')
+# 입력 디렉터리와 출력 디렉터리 경로 설정
+input_dir = os.path.join(current_dir, 'Study Data', file_name)
+output_dir = os.path.join(current_dir, 'Preprocessed Data', file_name)
 
-# 경로 확인
-print(f"Input Image Path: {input_image}")
-print(f"Output Image Path: {output_image}")
+# 입력한 파일명에 해당하는 디렉터리 내 모든 이미지 처리
+process_directory(input_dir, output_dir)
 
-result = remove_shadow(input_image, output_image)
-
-# 결과 시각화 (테스트용)
-cv2.imshow("Preprocessed Image", result)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+print(f"All images from '{file_name}' processed.")

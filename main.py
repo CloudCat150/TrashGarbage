@@ -5,7 +5,7 @@ def main():
     model = load_trained_model('plastic_trash_classifier.h5')
 
     # 이미지 경로 (예측할 이미지)
-    img_path = 'C:/Users/user/Desktop/image (2).jpg'
+    img_path = 'C:/Users/user/Desktop/TrashGarbage/Preprocessed Data/test/test.jpg'
 
     # 예측 수행
     prediction = predict_image_class(model, img_path)
